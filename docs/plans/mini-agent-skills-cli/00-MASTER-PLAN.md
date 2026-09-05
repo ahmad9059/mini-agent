@@ -1,6 +1,6 @@
 # Mini Agent Skills CLI
 
-> Status: **Phases 1 through 3 complete.** Skill discovery and the model-driven Claude activation loop are implemented and verified.
+> Status: **Phases 1 through 5 complete.** Skill discovery, model-driven activation, three production skills, and the executable CLI with failure UX are implemented and verified.
 >
 > Source request: Command Code take-home exercise supplied in chat on September 5, 2026. The requirements are preserved in `phase-01-validate-spec-and-scope.md`.
 
@@ -23,7 +23,7 @@ The external contract was checked against the current official sources:
 - The [description guidance](https://agentskills.io/skill-creation/optimizing-descriptions) confirms that the description carries the matching responsibility and should be evaluated with positive and negative prompts.
 - The official [Anthropic TypeScript SDK](https://github.com/anthropics/anthropic-sdk-typescript) supports Node.js ESM, `ANTHROPIC_API_KEY`, Messages API tool use, and typed API errors.
 - The current model catalog identifies `claude-sonnet-5` as the Claude API ID for Sonnet ([models overview](https://platform.claude.com/docs/en/models/overview)).
-- The two proposed third-party skills are listed in the skills registry: [doc-coauthoring](https://skills.sh/anthropics/skills/doc-coauthoring) and [brainstorming](https://skills.sh/obra/superpowers/brainstorming).
+- The two bundled third-party skills are listed in the skills registry: [brainstorming](https://skills.sh/obra/superpowers/brainstorming) and [systematic-debugging](https://skills.sh/obra/superpowers/systematic-debugging).
 
 ## 2. Architecture Decisions
 
@@ -57,7 +57,7 @@ The CLI is a one-shot prompt-to-response program, not a full autonomous coding e
 ## 3. Key Design Decisions Requiring Sign-Off
 
 1. **Use plain JavaScript, not TypeScript.** Default: approved for minimal setup and direct readability.
-2. **Bundle `doc-coauthoring` and `brainstorming`.** Default: use these registry entries with source attribution and their applicable license files. Both can begin useful conversational workflows with the CLI's text-only capability; avoid skills whose core behavior requires shell or subagent tools.
+2. **Bundle `brainstorming` and `systematic-debugging`.** The original `doc-coauthoring` choice was replaced during Phase 4 because no repository or skill-local license was available at its pinned revision. Both selected skills come from the MIT-licensed `obra/superpowers` repository and are preserved byte-for-byte with pinned source attribution.
 3. **Use only project `.skills/`.** Default: match the assignment exactly. Supporting `.agents/skills/`, home-directory skills, precedence, and trust policies is deferred because the format specification does not mandate discovery locations.
 4. **Use `claude-sonnet-5`.** Default: use the current Sonnet API ID verified during planning. Keep it in one named constant so a model change is a one-line edit.
 5. **Strict bundled-skill validation.** Default: malformed bundled skills stop startup with actionable diagnostics. This is simpler and safer than the integration guide's optional lenient compatibility behavior.
@@ -80,8 +80,8 @@ The CLI is a one-shot prompt-to-response program, not a full autonomous coding e
 | 1 | Validate Specification and Scope | Complete (planning evidence only) |
 | 2 | Scaffold and Discover Skills | Complete |
 | 3 | Implement Claude Activation Loop | Complete |
-| 4 | Add the Three Skills | Pending |
-| 5 | Complete CLI and Failure UX | Pending |
+| 4 | Add the Three Skills | Complete |
+| 5 | Complete CLI and Failure UX | Complete |
 | 6 | Verify, Document, and Prepare Submission | Pending |
 
 ## 6. Cross-Cutting Rules
@@ -97,4 +97,4 @@ The CLI is a one-shot prompt-to-response program, not a full autonomous coding e
 
 ## 7. Next Step
 
-Proceed to Phase 4 to add and validate the three production skills against the completed activation loop.
+Proceed to Phase 6 for live smoke verification, README documentation, hygiene checks, and the completion report.

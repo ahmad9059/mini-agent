@@ -30,8 +30,8 @@ Verify the full behavior, make the implementation legible to interview reviewers
 1. Run the full deterministic suite and lint command from a clean install.
 2. If a valid API key is available, run these live prompts and record outcomes without saving model responses containing sensitive data:
    - `I'm new to this project, what should I do?`
-   - `Help me draft a technical decision document.`
    - `Help me think through a design for a small command-line bookmark manager.`
+   - `The tests started failing with a TypeError after my last change. Help me find the root cause.`
    - `What's the weather?`
 3. Add optional debug observability only if needed for evaluation, for example `DEBUG=mini-agent` logging activated skill names to stderr. Do not include skill bodies or credentials. The default CLI remains clean.
 4. Verify the welcome response begins exactly with `> Welcome to our agent!`.

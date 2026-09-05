@@ -2,6 +2,8 @@
 
 Depends on: Phase 4
 
+Status: **Complete.** The executable one-shot CLI, startup validation, error mapping, and deterministic CLI tests are implemented and verified.
+
 ---
 
 ## 1. Goal
@@ -42,24 +44,24 @@ Turn the tested agent core into a polished one-shot command that is easy for rev
    - Connection/timeout.
    - Generic API status.
    Preserve enough detail for debugging without dumping request internals.
-9. Handle SIGINT through the SDK request signal if the implementation remains simple; otherwise allow Node's default interrupt behavior and document it.
+9. Retain Node's default SIGINT behavior rather than adding custom signal lifecycle code; document this limitation in Phase 6.
 
 ## 4. Files Touched
 
 - `src/cli.js` (new)
-- `src/agent.js`
 - `package.json`
+- `package-lock.json`
 - `test/cli.test.js` (new)
 
 ## 5. Acceptance Criteria / QA Checklist
 
-- [ ] `npm start -- "I'm new to this project, what should I do?"` is the single documented run command.
-- [ ] Missing prompt and missing API key fail before any network call.
-- [ ] Final responses go to stdout without debug noise.
-- [ ] Errors go to stderr and return a nonzero exit code.
-- [ ] Running from a different current directory still discovers the bundled skills.
-- [ ] Authentication, rate-limit, and connection failures produce actionable messages.
-- [ ] CLI tests remain credential-free and deterministic.
+- [x] `npm start -- "I'm new to this project, what should I do?"` is the single documented run command.
+- [x] Missing prompt and missing API key fail before any network call.
+- [x] Final responses go to stdout without debug noise.
+- [x] Errors go to stderr and return a nonzero exit code.
+- [x] Running from a different current directory still discovers the bundled skills.
+- [x] Authentication, rate-limit, and connection failures produce actionable messages.
+- [x] CLI tests remain credential-free and deterministic.
 
 ## 6. Open Questions
 

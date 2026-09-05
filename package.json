@@ -4,10 +4,14 @@
   "private": true,
   "description": "A small Claude CLI that loads Agent Skills on demand.",
   "type": "module",
+  "bin": {
+    "mini-agent": "./src/cli.js"
+  },
   "engines": {
     "node": ">=20"
   },
   "scripts": {
+    "start": "node src/cli.js",
     "test": "node --test",
     "lint": "node --check src/*.js test/*.test.js"
   },

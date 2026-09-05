@@ -1,0 +1,37 @@
+[
+  {
+    "category": "welcome-positive",
+    "prompt": "I'm new to this project, what should I do?",
+    "expectedSkill": "welcome-me"
+  },
+  {
+    "category": "welcome-paraphrase",
+    "prompt": "I just joined the team and don't know where to start in this repository.",
+    "expectedSkill": "welcome-me"
+  },
+  {
+    "category": "unrelated",
+    "prompt": "What's the weather today?",
+    "expectedSkill": null
+  },
+  {
+    "category": "simple-greeting",
+    "prompt": "Hello!",
+    "expectedSkill": null
+  },
+  {
+    "category": "brainstorming-positive",
+    "prompt": "Help me design a small command-line bookmark manager before we implement it.",
+    "expectedSkill": "brainstorming"
+  },
+  {
+    "category": "debugging-positive",
+    "prompt": "The test suite started failing with a TypeError after my last change. Help me find the root cause.",
+    "expectedSkill": "systematic-debugging"
+  },
+  {
+    "category": "debugging-near-miss",
+    "prompt": "Explain what a JavaScript stack trace is.",
+    "expectedSkill": null
+  }
+]

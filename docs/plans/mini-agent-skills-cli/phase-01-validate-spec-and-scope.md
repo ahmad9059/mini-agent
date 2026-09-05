@@ -52,7 +52,7 @@ The specification does not prescribe where clients discover skill directories. T
 
 ### 2.7 "Pick any two skills from the skills registry"
 
-**Confirmed.** Use registry-listed `doc-coauthoring` and `brainstorming`, record their sources, and preserve required licensing. These provide distinct, self-contained conversational workflows without making shell access part of the minimum viable agent.
+**Confirmed, then amended in Phase 4.** Use registry-listed `brainstorming` and `systematic-debugging`, record pinned sources, and preserve the MIT license. The initially approved `doc-coauthoring` choice was replaced when its pinned source revision provided no repository or skill-local license suitable for clear vendoring.
 
 ### 2.8 Submission metadata
 

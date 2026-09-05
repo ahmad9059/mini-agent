@@ -9,6 +9,7 @@ import {
   SkillValidationError,
   discoverSkills,
   formatSkillCatalog,
+  readSkillInstructions,
   readSkillMetadata,
 } from "../src/skills.js";
 
@@ -36,6 +37,16 @@ test("formats a metadata-only XML catalog", async () => {
   assert.doesNotMatch(catalog, /ALPHA_PRIVATE_INSTRUCTIONS|ZETA_PRIVATE_INSTRUCTIONS/);
   assert.doesNotMatch(catalog, /<location>/);
   assert.equal(formatSkillCatalog([]), "");
+});
+
+test("loads only the instruction body during activation", async () => {
+  const skillFile = path.join(fixtures, "valid", "alpha", "SKILL.md");
+  const instructions = await readSkillInstructions(skillFile);
+
+  assert.equal(instructions.directory, path.dirname(skillFile));
+  assert.match(instructions.body, /^# Alpha instructions/);
+  assert.match(instructions.body, /ALPHA_PRIVATE_INSTRUCTIONS/);
+  assert.doesNotMatch(instructions.body, /name: alpha|description:/);
 });
 
 test("reports malformed and invalid fixture files with their paths", async (t) => {

@@ -1,6 +1,6 @@
 # Mini Agent Skills CLI
 
-> Status: **Phases 1 and 2 complete.** The project scaffold and specification-facing skill loader are implemented and verified.
+> Status: **Phases 1 through 3 complete.** Skill discovery and the model-driven Claude activation loop are implemented and verified.
 >
 > Source request: Command Code take-home exercise supplied in chat on September 5, 2026. The requirements are preserved in `phase-01-validate-spec-and-scope.md`.
 
@@ -79,7 +79,7 @@ The CLI is a one-shot prompt-to-response program, not a full autonomous coding e
 |---|---|---|
 | 1 | Validate Specification and Scope | Complete (planning evidence only) |
 | 2 | Scaffold and Discover Skills | Complete |
-| 3 | Implement Claude Activation Loop | Pending |
+| 3 | Implement Claude Activation Loop | Complete |
 | 4 | Add the Three Skills | Pending |
 | 5 | Complete CLI and Failure UX | Pending |
 | 6 | Verify, Document, and Prepare Submission | Pending |
@@ -97,4 +97,4 @@ The CLI is a one-shot prompt-to-response program, not a full autonomous coding e
 
 ## 7. Next Step
 
-Review the completed Phase 2 loader, then proceed to Phase 3 to implement the Claude activation loop against its stable metadata API.
+Proceed to Phase 4 to add and validate the three production skills against the completed activation loop.

@@ -2,6 +2,8 @@
 
 Depends on: Phase 2
 
+Status: **Complete.** Implemented and verified on Node.js 20 and Node.js 26.
+
 ---
 
 ## 1. Goal
@@ -52,15 +54,23 @@ Connect the metadata catalog to Claude Sonnet and implement the smallest correct
 
 ## 5. Acceptance Criteria / QA Checklist
 
-- [ ] Initial API input contains all skill names/descriptions and no full skill bodies.
-- [ ] A simulated `welcome-me` tool call causes only `welcome-me` instructions to appear in the next request.
-- [ ] A simulated unrelated response completes after one request and never reads or sends `welcome-me` instructions.
-- [ ] Tool results use the exact `tool_use_id` returned by Claude.
-- [ ] Final output includes all text content blocks in order and excludes tool blocks.
-- [ ] Repeated activation does not duplicate the body in context.
-- [ ] The loop fails safely after the configured turn limit.
-- [ ] Tests make no network requests.
+- [x] Initial API input contains all skill names/descriptions and no full skill bodies.
+- [x] A simulated `welcome-me` tool call causes only `welcome-me` instructions to appear in the next request.
+- [x] A simulated unrelated response completes after one request and never reads or sends `welcome-me` instructions.
+- [x] Tool results use the exact `tool_use_id` returned by Claude.
+- [x] Final output includes all text content blocks in order and excludes tool blocks.
+- [x] Repeated activation does not duplicate the body in context.
+- [x] The loop fails safely after the configured turn limit.
+- [x] Tests make no network requests.
 
 ## 6. Open Questions
 
 None. Keep the manual loop rather than using a beta tool runner so the core protocol is visible to reviewers.
+
+## 7. Verification Record
+
+- `npm test`: 23 tests passed on Node.js 26.8.1.
+- `npm run lint`: passed on Node.js 26.8.1.
+- `npx --yes node@20 --test`: 23 tests passed on Node.js 20.
+- Node.js 20 syntax check passed for `src/agent.js`.
+- `npm audit --omit=dev`: zero vulnerabilities.

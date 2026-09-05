@@ -63,7 +63,7 @@ export async function readSkillMetadata(skillFile) {
 
   let metadata;
   try {
-    metadata = parseFrontmatter(content);
+    ({ metadata } = parseSkillFile(content));
   } catch (error) {
     throw new SkillValidationError([`${location}: ${error.message}`]);
   }
@@ -80,6 +80,18 @@ export async function readSkillMetadata(skillFile) {
   };
 }
 
+export async function readSkillInstructions(skillFile) {
+  const location = path.resolve(skillFile);
+  const content = await readFile(location, "utf8");
+
+  try {
+    const { body } = parseSkillFile(content);
+    return { body, directory: path.dirname(location) };
+  } catch (error) {
+    throw new SkillValidationError([`${location}: ${error.message}`]);
+  }
+}
+
 export function formatSkillCatalog(skills) {
   if (skills.length === 0) {
     return "";
@@ -93,7 +105,7 @@ export function formatSkillCatalog(skills) {
   return `<available_skills>\n${entries.join("\n")}\n</available_skills>`;
 }
 
-function parseFrontmatter(content) {
+function parseSkillFile(content) {
   const match = /^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/.exec(content);
   if (!match) {
     throw new Error("SKILL.md must start with YAML frontmatter enclosed by --- lines");
@@ -110,7 +122,10 @@ function parseFrontmatter(content) {
     throw new Error("frontmatter must be a YAML mapping");
   }
 
-  return metadata;
+  return {
+    metadata,
+    body: content.slice(match[0].length).trim(),
+  };
 }
 
 function validateMetadata(metadata, directoryName) {

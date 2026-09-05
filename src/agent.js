@@ -5,6 +5,7 @@ export const MODEL = "claude-sonnet-5";
 const MAX_TOKENS = 2_048;
 const DEFAULT_MAX_TURNS = 5;
 const ACTIVATE_SKILL_TOOL = "activate_skill";
+const WELCOME_HEADER = "> Welcome to our agent!";
 
 export async function runAgent({
   prompt,
@@ -12,6 +13,7 @@ export async function runAgent({
   client,
   maxTurns = DEFAULT_MAX_TURNS,
   loadSkill = readSkillInstructions,
+  onSkillActivated = () => {},
 }) {
   const messages = [{ role: "user", content: prompt }];
   const activeSkills = new Set();
@@ -38,7 +40,7 @@ export async function runAgent({
         throw new Error("Claude returned no text response");
       }
 
-      return text;
+      return activeSkills.has("welcome-me") ? ensureWelcomeHeader(text) : text;
     }
 
     messages.push({ role: "assistant", content: response.content });
@@ -46,7 +48,13 @@ export async function runAgent({
     const toolResults = [];
     for (const toolUse of toolUses) {
       toolResults.push(
-        await activateSkill({ toolUse, skillsByName, activeSkills, loadSkill }),
+        await activateSkill({
+          toolUse,
+          skillsByName,
+          activeSkills,
+          loadSkill,
+          onSkillActivated,
+        }),
       );
     }
     messages.push({ role: "user", content: toolResults });
@@ -98,7 +106,13 @@ function buildTools(skills) {
   ];
 }
 
-async function activateSkill({ toolUse, skillsByName, activeSkills, loadSkill }) {
+async function activateSkill({
+  toolUse,
+  skillsByName,
+  activeSkills,
+  loadSkill,
+  onSkillActivated,
+}) {
   if (toolUse.name !== ACTIVATE_SKILL_TOOL) {
     return toolError(toolUse.id, `Unknown tool: ${toolUse.name}`);
   }
@@ -119,6 +133,7 @@ async function activateSkill({ toolUse, skillsByName, activeSkills, loadSkill })
 
   const { body, directory } = await loadSkill(skill.location);
   activeSkills.add(name);
+  onSkillActivated(name);
 
   return {
     type: "tool_result",
@@ -147,4 +162,13 @@ function escapeXmlAttribute(value) {
     .replaceAll('"', "&quot;")
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;");
+}
+
+function ensureWelcomeHeader(text) {
+  if (text.startsWith(WELCOME_HEADER)) {
+    return text;
+  }
+
+  const body = text.replace(/^Welcome to our agent!\s*/i, "");
+  return body === "" ? WELCOME_HEADER : `${WELCOME_HEADER}\n\n${body}`;
 }

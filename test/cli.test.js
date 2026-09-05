@@ -1,9 +1,11 @@
 import assert from "node:assert/strict";
+import { execFile } from "node:child_process";
 import { stat, readFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
+import { promisify } from "node:util";
 
 import {
   APIConnectionError,
@@ -16,6 +18,7 @@ import {
 import { SKILLS_DIRECTORY, formatCliError, main } from "../src/cli.js";
 
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const execFileAsync = promisify(execFile);
 
 test("joins prompt arguments and prints only the final response", async () => {
   const stdout = captureStream();
@@ -178,6 +181,28 @@ test("routes runtime errors to stderr and returns a nonzero exit code", async ()
   assert.equal(stderr.output, "Error: Claude returned no text response\n");
 });
 
+test("emits activated skill names only when debug logging is enabled", async () => {
+  const stdout = captureStream();
+  const stderr = captureStream();
+
+  const exitCode = await main({
+    argv: ["Onboard me"],
+    env: { ANTHROPIC_API_KEY: "test-key", DEBUG: "mini-agent" },
+    stdout,
+    stderr,
+    discover: async () => [],
+    createClient: () => ({ messages: {} }),
+    run: async ({ onSkillActivated }) => {
+      onSkillActivated("welcome-me");
+      return "Response";
+    },
+  });
+
+  assert.equal(exitCode, 0);
+  assert.equal(stdout.output, "Response\n");
+  assert.equal(stderr.output, "[mini-agent] activated skill: welcome-me\n");
+});
+
 test("package metadata exposes an executable CLI and one-command start script", async () => {
   const packageJson = JSON.parse(await readFile(path.join(projectRoot, "package.json"), "utf8"));
   const cliStats = await stat(path.join(projectRoot, "src", "cli.js"));
@@ -185,6 +210,21 @@ test("package metadata exposes an executable CLI and one-command start script", 
   assert.equal(packageJson.bin["mini-agent"], "./src/cli.js");
   assert.equal(packageJson.scripts.start, "node src/cli.js");
   assert.notEqual(cliStats.mode & 0o111, 0);
+});
+
+test("can be imported when argv contains a synthetic non-file value", async () => {
+  const { stdout, stderr } = await execFileAsync(
+    process.execPath,
+    [
+      "--input-type=module",
+      "--eval",
+      "process.argv[1] = 'not-a-real-file'; await import('./src/cli.js');",
+    ],
+    { cwd: projectRoot },
+  );
+
+  assert.equal(stdout, "");
+  assert.equal(stderr, "");
 });
 
 function captureStream() {

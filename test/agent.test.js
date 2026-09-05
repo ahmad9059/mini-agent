@@ -21,6 +21,7 @@ test("activates a matching skill and continues with the exact tool use id", asyn
     textResponse("Welcome response"),
   ]);
   const loaded = [];
+  const activated = [];
 
   const result = await runAgent({
     prompt: "I am new here. What should I do?",
@@ -33,10 +34,12 @@ test("activates a matching skill and continues with the exact tool use id", asyn
         directory: path.dirname(location),
       };
     },
+    onSkillActivated: (name) => activated.push(name),
   });
 
-  assert.equal(result, "Welcome response");
+  assert.equal(result, "> Welcome to our agent!\n\nWelcome response");
   assert.deepEqual(loaded, [welcomeSkill.location]);
+  assert.deepEqual(activated, ["welcome-me"]);
   assert.equal(client.calls.length, 2);
 
   const initialRequest = client.calls[0];
@@ -74,6 +77,22 @@ test("answers an unrelated request without loading a skill", async () => {
   assert.equal(loadCount, 0);
   assert.equal(client.calls.length, 1);
   assert.doesNotMatch(JSON.stringify(client.calls[0]), /WELCOME_PRIVATE_INSTRUCTIONS/);
+});
+
+test("does not duplicate an exact welcome header returned by Claude", async () => {
+  const client = fakeClient([
+    toolResponse("toolu_welcome", "welcome-me"),
+    textResponse("> Welcome to our agent!\n\nStart with the README."),
+  ]);
+
+  const result = await runAgent({
+    prompt: "I am new here.",
+    skills: [welcomeSkill],
+    client,
+    loadSkill: async () => ({ body: "Instructions", directory: "/skills/welcome-me" }),
+  });
+
+  assert.equal(result, "> Welcome to our agent!\n\nStart with the README.");
 });
 
 test("handles multiple activations from one response", async () => {

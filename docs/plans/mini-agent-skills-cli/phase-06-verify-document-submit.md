@@ -2,6 +2,8 @@
 
 Depends on: Phase 5
 
+Status: **Complete.** Clean-install verification, live Claude checks, documentation, hygiene checks, and the completion report are finished.
+
 ---
 
 ## 1. Goal
@@ -59,17 +61,17 @@ Verify the full behavior, make the implementation legible to interview reviewers
 
 ## 5. Acceptance Criteria / QA Checklist
 
-- [ ] Fresh `npm install` succeeds under the documented Node version.
-- [ ] `npm test` passes without credentials or network access.
-- [ ] `npm run lint` passes.
-- [ ] Live welcome prompt produces the exact required first-line header.
-- [ ] Live unrelated prompt does not activate `welcome-me`.
-- [ ] Each registry skill activates for one clear matching prompt.
-- [ ] README contains the requested time spent, challenges, one command, and 2-3 examples.
-- [ ] README accurately explains that metadata is disclosed eagerly while bodies are loaded on demand.
-- [ ] No secret, `.env`, debug transcript, or generated coverage is tracked.
-- [ ] Final diff remains focused on the assignment.
+- [x] Fresh `npm install` succeeds under the documented Node version.
+- [x] `npm test` passes without credentials or network access.
+- [x] `npm run lint` passes.
+- [x] Live welcome prompt produces the exact required first-line header.
+- [x] Live unrelated prompt does not activate `welcome-me`.
+- [x] Each registry skill activates for one clear matching prompt.
+- [x] README contains the requested time spent, challenges, one command, and 2-3 examples.
+- [x] README accurately explains that metadata is disclosed eagerly while bodies are loaded on demand.
+- [x] No secret, `.env`, debug transcript, or generated coverage is tracked.
+- [x] Final diff remains focused on the assignment.
 
 ## 6. Open Questions
 
-- A live smoke run requires the user's `ANTHROPIC_API_KEY`. If unavailable, mark live checks as not run rather than presenting mocked tests as end-to-end proof.
+- Resolved: the ignored local `ANTHROPIC_API_KEY` was available. All four live smoke cases ran successfully, and only their outcomes are recorded.

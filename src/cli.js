@@ -46,7 +46,15 @@ export async function main({
   try {
     const skills = await discover(skillsDirectory);
     const client = createClient(apiKey);
-    const response = await run({ prompt, skills, client });
+    const debugOptions =
+      env.DEBUG === "mini-agent"
+        ? {
+            onSkillActivated: (name) => {
+              stderr.write(`[mini-agent] activated skill: ${name}\n`);
+            },
+          }
+        : {};
+    const response = await run({ prompt, skills, client, ...debugOptions });
     stdout.write(`${response}\n`);
     return 0;
   } catch (error) {
@@ -79,6 +87,13 @@ export function formatCliError(error) {
   return "Error: unexpected failure.";
 }
 
-if (process.argv[1] && realpathSync(process.argv[1]) === cliFile) {
+let isDirectExecution = false;
+try {
+  isDirectExecution = Boolean(process.argv[1]) && realpathSync(process.argv[1]) === cliFile;
+} catch {
+  // Importers may use a synthetic argv[1] that is not a filesystem path.
+}
+
+if (isDirectExecution) {
   process.exitCode = await main();
 }

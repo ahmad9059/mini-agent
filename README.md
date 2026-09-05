@@ -11,14 +11,15 @@ A small Node.js CLI that demonstrates model-driven [Agent Skills](https://agents
 
 ```bash
 npm install
-export ANTHROPIC_API_KEY="your-api-key"
 ```
 
-The CLI reads `ANTHROPIC_API_KEY` from the process environment and never prints it. Local `.env` files are ignored by Git but are not loaded automatically. If you keep the variable in `.env`, export it before running:
+Add the key to the ignored project-root `.env` file:
 
-```bash
-set -a; source .env; set +a
+```dotenv
+ANTHROPIC_API_KEY=your-api-key
 ```
+
+The CLI loads this file automatically and never prints the key. An `ANTHROPIC_API_KEY` already exported in the shell takes precedence over `.env`. The committed `.env.example` documents the expected variable without containing a credential.
 
 ## Run
 
@@ -79,16 +80,12 @@ The suite covers skill validation, metadata-only disclosure, activation tool tur
 
 ## Verification
 
-The final implementation passed 43 deterministic tests on Node.js 20 and the development Node version. A live Claude smoke matrix confirmed:
+The final implementation passed 45 deterministic tests on Node.js 20 and the development Node version. A live Claude smoke matrix confirmed:
 
 - The onboarding prompt activated `welcome-me` and produced the exact required first line.
 - The design prompt activated `brainstorming`.
 - The failing-test prompt activated `systematic-debugging`.
 - An unrelated weather prompt activated no skill and did not claim access to live weather.
-
-## Time Spent
-
-Approximately 45 minutes from the initial repository commit through implementation and final live verification.
 
 ## Challenges and Tradeoffs
 
@@ -101,6 +98,6 @@ Approximately 45 minutes from the initial repository commit through implementati
 
 - One prompt and one final response per process; there is no interactive session or conversation persistence.
 - The only client tool is `activate_skill`. There is no shell, file editing, browser, subagent, streaming, or arbitrary skill-resource loader.
-- `.env` files are not loaded automatically.
+- The CLI loads only the project-root `.env`; it does not search parent directories or support alternate environment-file flags.
 - Matching depends on Claude's judgment and may vary across model revisions.
 - Interrupts use Node's default SIGINT behavior rather than a custom graceful-cancellation flow.

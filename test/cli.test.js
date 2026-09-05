@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
-import { stat, readFile } from "node:fs/promises";
+import { mkdtemp, readFile, rm, stat, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
@@ -15,7 +15,12 @@ import {
   RateLimitError,
 } from "@anthropic-ai/sdk";
 
-import { SKILLS_DIRECTORY, formatCliError, main } from "../src/cli.js";
+import {
+  SKILLS_DIRECTORY,
+  formatCliError,
+  loadProjectEnvironment,
+  main,
+} from "../src/cli.js";
 
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const execFileAsync = promisify(execFile);
@@ -225,6 +230,31 @@ test("can be imported when argv contains a synthetic non-file value", async () =
 
   assert.equal(stdout, "");
   assert.equal(stderr, "");
+});
+
+test("loads a specified env file without overriding exported values", async () => {
+  const directory = await mkdtemp(path.join(os.tmpdir(), "mini-agent-env-"));
+  const envFile = path.join(directory, ".env");
+
+  try {
+    await writeFile(envFile, "ANTHROPIC_API_KEY=file-key\nEXTRA_SETTING=loaded\n");
+    const env = { ANTHROPIC_API_KEY: "exported-key" };
+
+    loadProjectEnvironment({ env, envFile });
+
+    assert.equal(env.ANTHROPIC_API_KEY, "exported-key");
+    assert.equal(env.EXTRA_SETTING, "loaded");
+  } finally {
+    await rm(directory, { recursive: true, force: true });
+  }
+});
+
+test("allows a missing project env file", () => {
+  const env = {};
+
+  loadProjectEnvironment({ env, envFile: path.join(os.tmpdir(), "missing-mini-agent.env") });
+
+  assert.deepEqual(env, {});
 });
 
 function captureStream() {

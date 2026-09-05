@@ -32,6 +32,7 @@ The external contract was checked against the current official sources:
 Use plain Node.js ESM rather than TypeScript. The exercise is small, and removing a build step keeps the review focused on the agent loop and skill semantics. Use:
 
 - `@anthropic-ai/sdk` for Claude Messages API calls.
+- `dotenv` for quiet, project-root `.env` loading without overriding exported variables.
 - `yaml` for standards-compliant frontmatter parsing.
 - Node's built-in `node:test` and `assert` for tests.
 - Node 20 or newer, declared in `package.json`.

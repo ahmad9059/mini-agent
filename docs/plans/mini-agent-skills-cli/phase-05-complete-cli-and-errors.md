@@ -17,6 +17,7 @@ Turn the tested agent core into a polished one-shot command that is easy for rev
 - Executable CLI entrypoint.
 - Prompt parsing from command-line arguments.
 - Environment and startup validation.
+- Project-root `.env` auto-loading with exported-variable precedence.
 - Concise stdout/stderr behavior and exit codes.
 - Anthropic error mapping.
 - CLI-level tests without real network calls where practical.
@@ -24,7 +25,6 @@ Turn the tested agent core into a polished one-shot command that is easy for rev
 ### Out of Scope
 
 - Interactive REPL.
-- `.env` auto-loading.
 - Streaming or spinners.
 - Rich terminal UI.
 - Provider/model configuration flags.
@@ -34,7 +34,7 @@ Turn the tested agent core into a polished one-shot command that is easy for rev
 1. Add a shebang to `src/cli.js` and expose it through `package.json` scripts and `bin`.
 2. Accept the complete prompt from `process.argv.slice(2).join(" ").trim()` so quoted and unquoted multi-word input behaves naturally.
 3. Print a one-line usage message and exit nonzero when no prompt is supplied.
-4. Check `ANTHROPIC_API_KEY` before constructing the client. Explain how to set it without printing its value.
+4. Load the ignored project-root `.env`, then check `ANTHROPIC_API_KEY` before constructing the client. Preserve an already exported value and explain how to configure the key without printing it.
 5. Resolve `.skills/` relative to the package/project root rather than the caller's current working directory, so the documented command is reliable.
 6. Discover and validate skills before making an API request.
 7. Print only Claude's final text to stdout. Send diagnostics to stderr and set `process.exitCode = 1` on failure.
@@ -57,6 +57,7 @@ Turn the tested agent core into a polished one-shot command that is easy for rev
 
 - [x] `npm start -- "I'm new to this project, what should I do?"` is the single documented run command.
 - [x] Missing prompt and missing API key fail before any network call.
+- [x] A project-root `.env` is loaded automatically without overriding an exported API key.
 - [x] Final responses go to stdout without debug noise.
 - [x] Errors go to stderr and return a nonzero exit code.
 - [x] Running from a different current directory still discovers the bundled skills.

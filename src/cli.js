@@ -11,6 +11,7 @@ import Anthropic, {
   AuthenticationError,
   RateLimitError,
 } from "@anthropic-ai/sdk";
+import { config as loadDotenv } from "dotenv";
 
 import { runAgent } from "./agent.js";
 import { discoverSkills } from "./skills.js";
@@ -18,6 +19,7 @@ import { discoverSkills } from "./skills.js";
 const cliFile = fileURLToPath(import.meta.url);
 const projectRoot = path.resolve(path.dirname(cliFile), "..");
 export const SKILLS_DIRECTORY = path.join(projectRoot, ".skills");
+export const ENV_FILE = path.join(projectRoot, ".env");
 
 export async function main({
   argv = process.argv.slice(2),
@@ -87,6 +89,13 @@ export function formatCliError(error) {
   return "Error: unexpected failure.";
 }
 
+export function loadProjectEnvironment({ env = process.env, envFile = ENV_FILE } = {}) {
+  const result = loadDotenv({ path: envFile, processEnv: env, quiet: true, override: false });
+  if (result.error && result.error.code !== "ENOENT") {
+    throw result.error;
+  }
+}
+
 let isDirectExecution = false;
 try {
   isDirectExecution = Boolean(process.argv[1]) && realpathSync(process.argv[1]) === cliFile;
@@ -95,5 +104,11 @@ try {
 }
 
 if (isDirectExecution) {
-  process.exitCode = await main();
+  try {
+    loadProjectEnvironment();
+    process.exitCode = await main();
+  } catch (error) {
+    process.stderr.write(`${formatCliError(error)}\n`);
+    process.exitCode = 1;
+  }
 }

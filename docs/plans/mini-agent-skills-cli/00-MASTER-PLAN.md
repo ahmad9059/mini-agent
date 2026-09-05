@@ -1,6 +1,6 @@
 # Mini Agent Skills CLI
 
-> Status: **Planning complete; Phase 1 validation complete.** No application code has been written.
+> Status: **Phases 1 and 2 complete.** The project scaffold and specification-facing skill loader are implemented and verified.
 >
 > Source request: Command Code take-home exercise supplied in chat on September 5, 2026. The requirements are preserved in `phase-01-validate-spec-and-scope.md`.
 
@@ -10,7 +10,7 @@
 
 This document records the architecture, decisions, risks, and six-phase sequence. Each phase file defines a reviewable implementation slice with exact files and acceptance checks. Work should proceed one phase at a time; a phase is complete only after its checks pass.
 
-## 1. Validated Current State
+## 1. Validated Starting State
 
 - The repository contains no implementation, package manifest, tests, or local engineering conventions. Its only tracked project content is the title `# mini-agent` in `README.md:1`.
 - The repository is on `main`, tracks `origin/main`, has a clean worktree, and has one commit (`6fbd424 first commit`) as observed during planning.
@@ -78,7 +78,7 @@ The CLI is a one-shot prompt-to-response program, not a full autonomous coding e
 | Phase | Title | Status |
 |---|---|---|
 | 1 | Validate Specification and Scope | Complete (planning evidence only) |
-| 2 | Scaffold and Discover Skills | Pending |
+| 2 | Scaffold and Discover Skills | Complete |
 | 3 | Implement Claude Activation Loop | Pending |
 | 4 | Add the Three Skills | Pending |
 | 5 | Complete CLI and Failure UX | Pending |
@@ -97,4 +97,4 @@ The CLI is a one-shot prompt-to-response program, not a full autonomous coding e
 
 ## 7. Next Step
 
-Confirm the defaults in Section 3, then implement Phase 2 only. After its tests pass, review the diff before proceeding to Phase 3.
+Review the completed Phase 2 loader, then proceed to Phase 3 to implement the Claude activation loop against its stable metadata API.

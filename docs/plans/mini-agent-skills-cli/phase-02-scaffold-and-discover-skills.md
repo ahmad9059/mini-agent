@@ -2,6 +2,8 @@
 
 Depends on: Phase 1 sign-off
 
+Status: **Complete.** Implemented and verified on Node.js 20 and Node.js 26.
+
 ---
 
 ## 1. Goal
@@ -56,14 +58,22 @@ Create the minimal Node.js project and implement the specification-facing skill 
 
 ## 5. Acceptance Criteria / QA Checklist
 
-- [ ] `npm install` succeeds on Node 20+.
-- [ ] A valid `SKILL.md` produces correct name, description, and absolute location.
-- [ ] Catalog output contains descriptions but no Markdown instruction bodies.
-- [ ] Missing frontmatter, malformed YAML, missing fields, invalid names, directory mismatches, and oversized values produce useful errors.
-- [ ] Non-directory entries and child directories without `SKILL.md` are ignored.
-- [ ] Discovery order is deterministic.
-- [ ] `npm test` passes without network access.
+- [x] `npm install` succeeds on Node 20+.
+- [x] A valid `SKILL.md` produces correct name, description, and absolute location.
+- [x] Catalog output contains descriptions but no Markdown instruction bodies.
+- [x] Missing frontmatter, malformed YAML, missing fields, invalid names, directory mismatches, and oversized values produce useful errors.
+- [x] Non-directory entries and child directories without `SKILL.md` are ignored.
+- [x] Discovery order is deterministic.
+- [x] `npm test` passes without network access.
 
 ## 6. Open Questions
 
 None after Phase 1 sign-off.
+
+## 7. Verification Record
+
+- `npm test`: 15 tests passed on Node.js 26.8.1.
+- `npm run lint`: passed on Node.js 26.8.1.
+- `npx --yes node@20 --test`: 15 tests passed on Node.js 20.
+- Node.js 20 syntax checks passed for the source and test modules.
+- `npm audit --omit=dev`: zero vulnerabilities.

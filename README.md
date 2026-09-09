@@ -87,6 +87,10 @@ The final implementation passed 45 deterministic tests on Node.js 20 and the dev
 - The failing-test prompt activated `systematic-debugging`.
 - An unrelated weather prompt activated no skill and did not claim access to live weather.
 
+## Time Spent
+
+Approximately 12 hours in total, including specification research, planning, implementation, automated testing, live Claude verification, and documentation.
+
 ## Challenges and Tradeoffs
 
 - Model-driven matching demonstrates the specification more faithfully than keyword matching, but live selection remains nondeterministic. Precise descriptions, deterministic tool-loop tests, and a live smoke matrix mitigate this.
